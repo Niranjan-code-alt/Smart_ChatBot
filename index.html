@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartBot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="chat-wrapper">
+    <div class="chat-header">
+      <span>🤖 SmartBot</span>
+      <button id="toggleMode">Toggle</button>
+    </div>
+
+    <div id="chat">
+      <div class="bot-wrapper">
+        <span class="bot-emoji">🤖</span>
+        <p class="bot-text">
+          Welcome to <strong>Xyz College</strong>! 🎓<br>
+          Explore our programs and take the first step toward a bright future. Ask us anything about <strong>admissions</strong>, <strong>courses</strong>, <strong>fees</strong>, or <strong>contact</strong>!
+        </p>
+      </div>
+    </div>
+
+    <div class="chat-actions">
+      <button onclick="copyChat()">Copy</button>
+      <button onclick="saveChat()">Save</button>
+      <button onclick="loadChat()">Load</button>
+      <button onclick="clearChat()">Clear</button> <!-- New Clear button -->
+    </div>
+
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Type a message..." />
+      <button onclick="startListening()">🎤</button>
+      <button onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <script>
+    const chat = document.getElementById('chat');
+    const userInput = document.getElementById('userInput');
+
+    const commands = {
+      "help": `
+        • <b>help</b> — Show command list<br>
+        • <b>about</b> — Learn about SmartBot<br>
+        • <b>contact</b> — Contact support<br>
+        • <b>features</b> — View bot features<br>
+        • <b>clear</b> — Clear chat<br>
+        • <b>admission</b> — Learn about admission<br>
+        • <b>courses</b> — Learn about available courses<br>
+        • <b>fees</b> — Learn about fees
+      `,
+      "about": "I am <b>SmartBot</b>, your AI-powered virtual assistant created with HTML, CSS, and JS!",
+      "contact": "You can reach us at: <b>support@example.com</b>",
+      "features": `
+        <b>SmartBot Features:</b><br>
+        • Voice to Text<br>
+        • Typewriter Animation<br>
+        • Dark/Light Mode Toggle<br>
+        • Copy / Save / Load / Clear Chat<br>
+        • Command Support<br>
+      `,
+      "admission": "For admission, please visit our official portal or type <b>contact</b> for further assistance.",
+      "courses": "We offer various courses in the following categories:<br>• Computer Science<br>• Electrical Engineering<br>• Mechanical Engineering<br>For details, type <b>admission</b>.",
+      "fees": "Our fee structure is as follows:<br>• Undergraduate Courses: $1000 per semester<br>• Postgraduate Courses: $1500 per semester<br>For more information, type <b>admission</b>.",
+      "clear": "Chat cleared. Start fresh!"
+    };
+
+    function appendBotMessage(content) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'bot-wrapper';
+
+      const emoji = document.createElement('div');
+      emoji.className = 'bot-emoji';
+      emoji.textContent = '🤖';
+
+      const text = document.createElement('div');
+      text.className = 'bot-text';
+
+      wrapper.appendChild(emoji);
+      wrapper.appendChild(text);
+      chat.appendChild(wrapper);
+      chat.scrollTop = chat.scrollHeight;
+
+      let i = 0;
+      const typing = setInterval(() => {
+        text.innerHTML = content.substring(0, i++);
+        if (i > content.length) clearInterval(typing);
+      }, 20);
+    }
+
+    function appendUserMessage(content) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'user-wrapper';
+
+      const text = document.createElement('div');
+      text.className = 'user-text';
+      text.textContent = content;
+
+      wrapper.appendChild(text);
+      chat.appendChild(wrapper);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendMessage() {
+      const input = userInput.value.trim();
+      if (!input) return;
+      appendUserMessage(input);
+      userInput.value = '';
+
+      const lower = input.toLowerCase();
+
+      // Show thinking dots first
+      const thinkingWrapper = document.createElement('div');
+      thinkingWrapper.className = 'bot-wrapper';
+
+      const emoji = document.createElement('div');
+      emoji.className = 'bot-emoji';
+      emoji.textContent = '🤖';
+
+      const thinking = document.createElement('div');
+      thinking.className = 'bot-thinking';
+      thinking.innerHTML = '<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
+
+      thinkingWrapper.appendChild(emoji);
+      thinkingWrapper.appendChild(thinking);
+      chat.appendChild(thinkingWrapper);
+      chat.scrollTop = chat.scrollHeight;
+
+      setTimeout(() => {
+        thinkingWrapper.remove();
+
+        if (commands[lower]) {
+          if (lower === "clear") chat.innerHTML = '';
+          appendBotMessage(commands[lower]);
+        } else if (["hi", "hello", "hii", "hey"].includes(lower)) {
+          appendBotMessage("Hi there! 👋 How can I assist you today?");
+        } else if (lower.includes("admission")) {
+          appendBotMessage(commands["admission"]);
+        } else if (lower.includes("courses")) {
+          appendBotMessage(commands["courses"]);
+        } else if (lower.includes("fees")) {
+          appendBotMessage(commands["fees"]);
+        } else {
+          const suggestion = Object.keys(commands).map(c => `<b>${c}</b>`).join(', ');
+          appendBotMessage(`Sorry, I didn’t understand that.<br>Try: ${suggestion}`);
+        }
+      }, 800);
+    }
+
+    document.getElementById('toggleMode').onclick = () => {
+      document.body.classList.toggle('light-mode');
+    };
+
+    function startListening() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Speech Recognition not supported in this browser.");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+
+      recognition.onresult = (e) => {
+        const transcript = e.results[0][0].transcript;
+        document.getElementById('userInput').value = transcript;
+      };
+
+      recognition.onerror = (e) => {
+        alert("Voice recognition error: " + e.error);
+      };
+    }
+
+    // Copy Chat
+    function copyChat() {
+      const chatContent = document.getElementById('chat').innerText;
+      navigator.clipboard.writeText(chatContent)
+        .then(() => {
+          alert('Chat copied to clipboard!');
+        })
+        .catch(err => {
+          alert('Failed to copy chat: ' + err);
+        });
+    }
+
+    // Save Chat
+    function saveChat() {
+      const chatContent = document.getElementById('chat').innerHTML;
+      localStorage.setItem('savedChat', chatContent);
+      alert('Chat saved!');
+    }
+
+    // Load Chat
+    function loadChat() {
+      const savedChat = localStorage.getItem('savedChat');
+      if (savedChat) {
+        document.getElementById('chat').innerHTML = savedChat;
+        alert('Chat loaded!');
+      } else {
+        alert('No saved chat found.');
+      }
+    }
+
+    // Clear Chat
+    function clearChat() {
+      if (confirm("Are you sure you want to clear the chat?")) {
+        document.getElementById('chat').innerHTML = `
+          <div class="bot-wrapper">
+            <span class="bot-emoji">🤖</span>
+            <p class="bot-text">Hi there! 👋 How can I assist you today?</p>
+          </div>
+        `;
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,271 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+body {
+  background: linear-gradient(135deg, #7e4fd4, #4c2885);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.5s;
+}
+body.light-mode {
+  background: linear-gradient(135deg, #f5f5f5, #ccc);
+}
+.chat-wrapper {
+  width: 100%;
+  max-width: 400px;
+  height: 600px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+.chat-header {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 18px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#toggleMode {
+  background: #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+}
+#chat {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: smooth;
+}
+#chat p {
+  max-width: 80%;
+  margin: 6px 0;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  word-wrap: break-word;
+  animation: slideIn 0.3s ease;
+}
+#chat p.user {
+  align-self: flex-end;
+  background-color: #4e8cff;
+  color: white;
+}
+#chat p.bot {
+  align-self: flex-start;
+  background-color: #ffffffcc;
+  color: #333;
+}
+.input-area {
+  display: flex;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+input[type="text"] {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 25px;
+  outline: none;
+}
+.input-area button {
+  margin-left: 10px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 25px;
+  background: #00c6ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+.chat-actions {
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, 0.1);
+}
+.chat-actions button {
+  background: #ffffff22;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.chat-actions button:hover {
+  background: #00c6ff;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.message.bot {
+  white-space: normal;
+  line-height: 1.6;
+}
+
+.dots span {
+  animation: blink 1.2s infinite;
+  font-size: 22px;
+  margin-right: 2px;
+}
+.dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes blink {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+.message.bot, .message.user {
+  display: flex;
+  align-items: flex-start;
+  margin: 8px 0;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.logo {
+  font-size: 24px;
+  margin-right: 8px;
+}
+
+.bot-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.bot-wrapper .emoji {
+  margin-right: 8px;
+  font-size: 24px;
+}
+
+.user-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.user-wrapper .emoji {
+  display: none;
+}
+
+.bot-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.bot-emoji {
+  font-size: 26px;
+  margin-top: 5px;
+}
+
+.bot-text {
+  background: rgba(255, 255, 255, 0.8);
+  color: #333;
+  padding: 10px 14px;
+  border-radius: 15px;
+  max-width: 70%;
+  word-break: break-word;
+  font-size: 14px;
+}
+
+.user-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0;
+}
+
+.user-text {
+  background: #007bff;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 15px;
+  max-width: 70%;
+  word-break: break-word;
+}
+
+.bot-thinking {
+  background: white;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 15px;
+}
+
+.dots span {
+  animation: blink 1.2s infinite;
+}
+
+.dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+#chat {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: smooth;
+}
+
+.bot-wrapper {
+  display: flex;
+  align-items: center; /* SAME LINE e thakbe */
+  gap: 10px; /* Emoji ar text er majhe gap */
+  margin: 8px 0;
+}
+
+.bot-emoji {
+  font-size: 24px;
+}
+
+.bot-text {
+  background: rgba(255, 255, 255, 0.8);
+  color: #333;
+  padding: 10px 14px;
+  border-radius: 15px;
+  max-width: 70%;
+  word-break: break-word;
+  font-size: 14px;
+}
